@@ -9,6 +9,7 @@ pipreqs==0.4.13
 # psycopg==3.1.18
 # psycopg2==2.9.9
 psycopg2-binary==2.9.9
+djangorestframework==3.14.0
 requests==2.31.0
 sqlparse==0.4.4
 typing_extensions==4.9.0
