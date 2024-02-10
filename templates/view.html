@@ -1,0 +1,70 @@
+{% extends 'theme.html' %}
+{% load static %}
+{% block body %}
+<div class="wrapper row3">
+    <main class="hoc container clear"> 
+      <!-- main body -->
+      <!-- ################################################################################################ -->
+      <div class="content"> 
+        <!-- ################################################################################################ -->
+        <h1 style="font-size: 36px;">{{ tlog.title }}</h1>
+        {% for i in tlog_body %}
+            {% if i.body != "" %}
+              {% autoescape off %}
+                <p>{{ i.body }}</p>
+              {% endautoescape off %}
+            {% elif i.image != "" %}
+                {% if i.id|divisibleby:"2" %}
+                <img class="imgr borderedbox inspace-5" style="max-height:250px;" src="{{ i.image }}" alt="">
+                {% else %}
+                <img class="imgl borderedbox inspace-5" style="max-height:250px;" src="{{ i.image }}" alt="">
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+      </div>
+      <div class="clear"></div>
+    </main><br>
+    <main class="hoc container clear"> 
+      <div class="content"> 
+        <div id="comments">
+          <h2>Comments</h2>
+          <ul>
+            {% for i in tlog_comment %}
+            <li>
+              <article>
+                <header>
+                  <figure class="avatar"><img src="../images/demo/avatar.png" alt=""></figure>
+                  <address>
+                  By <a href="{{ request.scheme }}://{{ request.get_host }}/profile/{{ i.email }}">{{ i.email }}</a>
+                  </address>
+                  <time datetime="2045-04-06T08:15+00:00">{{ i.date|date:'l' }}, {{i.date}}</time>
+                </header>
+                <div class="comcont">
+                  <p>{{ i.comment }}</p>
+                </div>
+              </article>
+            </li>
+            {% endfor %}
+          </ul>
+          <h2>Write A Comment</h2>
+          <form action="{{ request.scheme }}://{{ request.get_host }}/add_new_comment" method="post">
+            {% csrf_token %}
+            <div class="block clear">
+                <input type="hidden" name="tlog_id" value="{{ t_id }}">
+              <textarea name="comment" id="comment" placeholder="Your Comment" cols="25" rows="10"></textarea>
+            </div>
+            <div>
+              <input type="submit" name="submit" value="Submit Form">
+              &nbsp;
+              {% comment %} <input type="reset" name="reset" value="Reset Form"> {% endcomment %}
+            </div>
+          </form>
+        </div>
+        <!-- ################################################################################################ -->
+      </div>
+      <!-- ################################################################################################ -->
+      <!-- / main body -->
+      <div class="clear"></div>
+    </main>
+  </div>
+{% endblock body %}

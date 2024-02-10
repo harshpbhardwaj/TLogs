@@ -1,0 +1,148 @@
+{% extends 'theme.html' %}
+{% load static %}
+{% block body %}
+
+<div id="pageintro" class="hoc clear">
+    <article>
+      <p>Start TLoging Now</p>
+      <h3 class="heading">Read/Write Technical logs Here</h3>
+      <p>You can read TLogs here and You are also free to write your own TLogs.</p>
+      <footer><a class="btn" href="#" data-toggle="modal" data-target="#myModal4">Start</a></footer>
+    </article>
+  </div>
+</div>
+<div class="wrapper row3">
+  <main class="hoc container clear">
+    <section id="introblocks">
+      <ul class="nospace group">
+        {% for i in tlogs %}
+        <li class="one_third">
+          {% if i.image != '' %}
+          <figure><a class="imgover" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}"><img src="{{ i.image }}" alt=""></a>
+          {% else %}
+          <figure><a class="imgover" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}"><img src="{% static 'images/demo/348x220.png' %}" alt=""></a>
+          {% endif %}
+            <figcaption>
+              <h6 class="heading">{{ i.title }}</h6>
+              {% if i.body != '' %}
+              {{ i.body|linebreaksbr }} [&hellip;]
+              {% endif %}
+            </figcaption>
+          </figure>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    <div class="clear"></div>
+  </main>
+</div>
+<div class="wrapper row2">
+  <section class="hoc container clear">
+    <div class="sectiontitle">
+      <p class="nospace font-xs">New & Popular</p>
+      <h6 class="heading">Trending TLogs</h6>
+    </div>
+    <ul class="nospace group center">
+      {% for i in trending_tlogs %}
+      <li class="one_third {% if forloop.counter == 1 %} first{% endif %}">
+        <article><a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">
+          {% if i.image != '' %}
+            <img src="{{ i.image }}" style="max-height: 120px; margin-bottom: 40px;" alt="">
+          {% else %}
+            <img src="{% static 'images/demo/348x220.png' %}" style="max-height: 120px; margin-bottom: 40px;" alt="">
+          {% endif %}
+        </a>
+          <h6 class="heading">{{ i.title }}</h6>
+          <p class="btmspace-30">{{ i.body }} [&hellip;]</p>
+          <footer><a class="btn" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">Read More</a></footer>
+        </article>
+      </li>
+      {% endfor %}
+      {% comment %} {% for i in '02'|make_list %}
+      <li class="one_third">
+        <article><a href="#"><img src="{% static 'images/demo/348x220.png' %}" style="max-height: 120px; margin-bottom: 40px;" alt=""></a>
+          <h6 class="heading">Congue nulla facilisi</h6>
+          <p class="btmspace-30">Laoreet ligula phasellus pede phasellus faucibus enim quis lacus praesent ipsum
+            vulputate [&hellip;]</p>
+          <footer><a class="btn" href="#">Read More</a></footer>
+        </article>
+      </li>
+      {% endfor %} {% endcomment %}
+    </ul>
+  </section>
+</div>
+<div class="wrapper row3">
+  <section class="hoc container clear">
+    <div class="sectiontitle">
+      <p class="nospace font-xs">Id erat duis nibh diam at</p>
+      <h6 class="heading">Vulputate quis lacus nullam</h6>
+    </div>
+    <ul id="stats" class="nospace group">
+      <li>
+        <p> </p>
+        <p> </p>
+      </li>
+      <li><i class="fas fa-id-badge"></i>
+        <p><a href="#">{{ users_count }}</a></p>
+        <p>Members in our Family</p>
+      </li>
+      <li><i class="fas fa-skull"></i>
+        <p><a href="#">{{ tlog_count }}</a></p>
+        <p>Number of Blogs</p>
+      </li>
+      <li>
+        <p></p>
+        <p></p>
+      </li>
+    </ul>
+  </section>
+</div>
+<div class="wrapper coloured">
+  <section id="testimonials" class="hoc container clear">
+    <div class="sectiontitle">
+      <p class="nospace font-xs">This is child company of HExDEx</p>
+      <h6 class="heading">Our Team</h6>
+    </div>
+    <article class="one first"><img src="{% static 'images/demo/100x100.png' %}" alt="">
+      {% comment %} <blockquote>Proin sed sapien ut convallis lectus ac magna nulla mattis purus phasellus consectetuer fermentum
+        augue integer vulputate lectus vitae lorem suspendisse potenti donec suscipit.</blockquote> {% endcomment %}
+      <h6 class="heading">Er. Harsh Pratap Bhardwaj</h6>
+      <em>CEO of HExDEx</em>
+    </article>
+    {% comment %} <article class="one_half"><img src="{% static 'images/demo/100x100.png' %}" alt="">
+      <blockquote>Pellentesque et ipsum mattis ipsum pellentesque pretium proin rutrum turpis non accumsan aliquet
+        odio magna luctus neque in adipiscing mi odio ac felis sed mattis enim quis ipsum.</blockquote>
+      <h6 class="heading">G. Doe</h6>
+      <em>Aenean vestibulum mattis</em>
+    </article> {% endcomment %}
+  </section>
+</div>
+<div class="wrapper row3">
+  <section class="hoc container clear">
+    <div class="sectiontitle">
+      <p class="nospace font-xs">Top viewed Tlogs in last 7 days</p>
+      <h6 class="heading">Top Tlogs</h6>
+    </div>
+    <ul class="nospace group latest">
+      {% for i in weekly_top %}
+      <li class="one_half {% if forloop.counter == 1 %} first{% endif %}">
+        <article>
+          <div class="excerpt">
+            <ul class="nospace meta">
+              <li><i class="fas fa-user"></i> <a href="{{ request.scheme }}://{{ request.get_host }}/profile/{{ i.email }}">{{i.email}}</a></li>
+              <li><i class="fa fa-eye"></i> <a href="#">{{i.views}}</a></li>
+            </ul>
+            <h6 class="heading">{{i.title}}</h6>
+            <p>{{ i.body }} [<a
+                href="#">&hellip;</a>]</p>
+            <footer><a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">Read More</a></footer>
+          </div>
+          <time datetime="2045-04-06T08:15+00:00"><strong>{{i.date.day}}</strong> <em>{{ i.date|date:'M' }}</em></time>
+        </article>
+      </li>
+      {% endfor %}
+    </ul>
+    <footer class="center"><a class="btn" href="#">View More</a></footer>
+  </section>
+</div>
+{% endblock body %}

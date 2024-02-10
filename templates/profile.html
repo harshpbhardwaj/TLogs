@@ -1,0 +1,111 @@
+{% extends 'theme.html' %}
+{% load static %}
+{% block body %}
+
+<style type="text/css">
+  /* DEMO ONLY */
+  .container .demo{text-align:center;}
+  .container .demo div{padding:8px 0;}
+  .container .demo div:nth-child(odd){color:#FFFFFF; background:#CCCCCC;}
+  .container .demo div:nth-child(even){color:#FFFFFF; background:#979797;}
+  @media screen and (max-width:900px){.container .demo div{margin-bottom:0;}}
+  /* DEMO ONLY */
+  </style>
+{% comment %} <div id="breadcrumb" class="hoc clear"> 
+  <!-- ################################################################################################ -->
+  <h6 class="heading">Basic Grid</h6>
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Lorem</a></li>
+    <li><a href="#">Ipsum</a></li>
+    <li><a href="#">Dolor</a></li>
+  </ul>
+  <!-- ################################################################################################ -->
+</div> {% endcomment %}
+<!-- ################################################################################################ -->
+</div>
+<div class="wrapper ">
+  <section id="testimonials" class="hoc container clear">
+    <article class="one first"><img src="{% static 'images/demo/100x100.png' %}" alt="">
+      {% comment %} <blockquote>Proin sed sapien ut convallis lectus ac magna nulla mattis purus phasellus consectetuer fermentum
+        augue integer vulputate lectus vitae lorem suspendisse potenti donec suscipit.</blockquote> {% endcomment %}
+      <h6 class="heading">{{ profile.fname }} {{ profile.mname }} {{ profile.lname }}</h6>
+      <em>CEO of HExDEx</em>
+    </article>
+    <div class="wrapper row3">
+      <main class="hoc container clear">
+        <div class="content"> 
+          <h2>About</h2>
+          <div class="group btmspace-50 ">
+            <div class="one_half first">     
+                <ul class="list-unstyled mb-1-9">
+                    <li class="mb-2 mb-xl-3 display-28"><span class="display-26 text-secondary me-2 font-weight-600">Email:</span> {{ profile.email }} </li>
+                    <li class="mb-2 mb-xl-3 display-28"><span class="display-26 text-secondary me-2 font-weight-600">Phone:</span> {{ profile.phone }}</li>
+                </ul>
+            </div>
+            <div class="one_half">        
+                <ul class="list-unstyled mb-1-9">
+                    <li class="mb-2 mb-xl-3 display-28"><span class="display-26 text-secondary me-2 font-weight-600">Location:</span> {{ profile.city }}, {{ profile.state }}, {{ profile.country }} </li>
+                </ul>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+</div>
+
+
+<div class="wrapper row2">
+  <section class="hoc container clear">
+    <div class="sectiontitle">
+      <h6 class="heading">Your Tlogs</h6>
+    </div>
+    <ul class="nospace group center">
+      {% for i in tlogs %}
+      <li class="one_third {% if forloop.counter|add:"2"|divisibleby:"3" %} first{% endif %}" style="margin-bottom:100px;background:#eaeaea;">
+        {% if request.user.username == i.email %}<div class="pull-right bg-white rounded" onclick="delete_post({{ i.t_id }})"><i class="fas fa-trash fa-lg m-2" style="color: #f66;"></i></div>{% endif %}
+        <article><a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">
+          {% if i.image != '' %}
+            <img src="{{ i.image }}" style="max-height: 120px; margin-bottom: 40px;" alt="">
+          {% else %}
+            <img src="{% static 'images/demo/348x220.png' %}" style="max-height: 120px; margin-bottom: 40px;" alt="">
+          {% endif %}
+        </a>
+          <h6 class="heading">{{ i.title }}</h6>
+          <p class="btmspace-30">{{ i.body }} [&hellip;]</p>
+          <footer><a class="btn" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">Read More</a></footer>
+        </article>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+<script>
+  function delete_post(id){
+    var confirmation = confirm("Want to delete?");
+    formData = {
+      'csrfmiddlewaretoken' : '{{ csrf_token }}',
+      'tlog_id' : id,
+      'confirmation' : confirmation
+    }
+    //alert(formData.tlog_id);
+    if (confirmation){
+      if (JSON.parse(document.getElementById('is_auth').textContent)) {
+        $.ajax({
+          url: "/delete_tlog",
+          type: "post",
+          data: formData,
+          success: function (d) {
+            location.reload();
+          }
+        });
+      } else {
+        alert("Sign in first!");
+      }
+    }else{
+      location.reload();
+    }
+  }
+</script>
+{% endblock body %}

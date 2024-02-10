@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <title>TLogs</title>
+  <meta charset="utf-8">
+  {% load static %}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <!-- JavaScript Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <link href="{% static '/layout/styles/layout.css' %}" rel="stylesheet" type="text/css" media="all">
+  <!-- <script>
+  $('#myModal').on('shown.bs.modal', function () {
+  $('#myInput').trigger('focus')
+})
+</script> -->
+</head>
+
+<body id="top">
+  <div class="bgded overlay" style="background-image:url('{% static 'images/demo/backgrounds/01.png' %}');">
+    <header id="header" class="hoc clear">
+      <div id="logo" class="one_quarter first">
+        <h1><a href="{{ request.scheme }}://{{ request.get_host }}">TLogs</a></h1>
+        <p>Technical Bloging Site</p>
+      </div>
+      <div class="three_quarter">
+        <ul class="nospace clear">
+          <li class="one_third first">
+            <div class="block clear">
+              {% comment %} <a href="#"><i class="fas fa-phone"></i></a> <span><strong>Give us a call:</strong> +00
+                (123) 456 7890</span> {% endcomment %}
+            </div>
+          </li>
+          <li class="one_third">
+            <div class="block clear">
+              {% comment %} <a href="#"><i class="fas fa-envelope"></i></a> <span><strong>Send us a mail:</strong>
+                support@domain.com</span> {% endcomment %}
+            </div>
+          </li>
+          <li class="one_third">
+            <div class="block clear">
+              {% if request.user.is_authenticated %}
+              {% comment %} <a href="#"><i class="fas fa-clock"></i></a> <span><strong> Mon. - Sat.:</strong> 08.00am -
+                18.00pm</span> {% endcomment %}
+              <a href="{{ request.scheme }}://{{ request.get_host }}/profile"><i class="fas fa-user"></i></a> <span><strong> {{ request.user.first_name }}</strong>
+                {{ request.user.username }}</span>
+              {% else %}
+              <i class="fas fa-user" data-toggle="modal" data-target="#myModal"></i> <span data-toggle="modal"
+                data-target="#myModal"><strong> Sign In</strong></span>
+              {% endif %}
+            </div>
+          </li>
+        </ul>
+      </div>
+    </header>
+    {% if messages %}
+    {% comment %} <ul class="messages"> {% endcomment %}
+      {% for message in messages %}
+
+      <div class="alert alert-{{ message.tags }} my-0" role="alert">
+        {{ message }}
+      </div>
+
+      {% comment %} <li{% if message.tags %} class="" {% endif %}>
+        </li> {% endcomment %}
+        {% endfor %}
+        {% comment %}
+    </ul> {% endcomment %}
+    {% endif %}
+    <section id="navwrapper" class="hoc clear">
+      <nav id="mainav">
+        <ul class="clear">
+          <li class="active"><a href="{{ request.scheme }}://{{ request.get_host }}">Home</a></li>
+          {% comment %} <li><a class="drop" href="#">Pages</a>
+            <ul>
+              <li><a href="pages/gallery.html">Gallery</a></li>
+              <li><a href="pages/full-width.html">Full Width</a></li>
+              <li><a href="pages/sidebar-left.html">Sidebar Left</a></li>
+              <li><a href="pages/sidebar-right.html">Sidebar Right</a></li>
+              <li><a href="pages/basic-grid.html">Basic Grid</a></li>
+              <li><a href="pages/font-icons.html">Font Icons</a></li>
+            </ul>
+          </li> {% endcomment %}
+          {% comment %} <li><a class="drop" href="#">Dropdown</a>
+            <ul>
+              <li><a href="#">Level 2</a></li>
+              <li><a class="drop" href="#">Level 2 + Drop</a>
+                <ul>
+                  <li><a href="#">Level 3</a></li>
+                  <li><a href="#">Level 3</a></li>
+                  <li><a href="#">Level 3</a></li>
+                </ul>
+              </li>
+              <li><a href="#">Level 2</a></li>
+            </ul>
+          </li> {% endcomment %}
+          {% comment %} <li><a href="#">Link Text</a></li>
+          <li><a href="#">Link Text</a></li> {% endcomment %}
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+      {% if request.user.is_authenticated %}
+      <form action="/signout">
+        <button style="float:right;" type="submit" class="btn btn-outline-primary">Sign out</button>
+      </form>
+      {% endif%}
+      {% comment %} <div id="searchform">
+        <div>
+          <form action="#" method="post">
+            <fieldset>
+              <legend>Quick Search:</legend>
+              <input type="text" placeholder="Enter search term&hellip;">
+              <button type="submit"><i class="fas fa-search"></i></button>
+            </fieldset>
+          </form>
+        </div>
+      </div> {% endcomment %}
+    </section>
+    
+    {% block body %}{% endblock body %}
+    
+  <div class="bgded overlay row4" style="background-image:url('images/demo/backgrounds/01.png');">
+    <footer id="footer" class="hoc clear">
+      <div class="center btmspace-50">
+        <h6 class="heading">TLogs-Social</h6>
+        <ul class="faico clear">
+          <li><a class="faicon-dribble" href="#"><i class="fab fa-dribbble"></i></a></li>
+          <li><a class="faicon-facebook" href="#"><i class="fab fa-facebook"></i></a></li>
+          <li><a class="faicon-google-plus" href="#"><i class="fab fa-google-plus-g"></i></a></li>
+          <li><a class="faicon-linkedin" href="#"><i class="fab fa-linkedin"></i></a></li>
+          <li><a class="faicon-twitter" href="#"><i class="fab fa-twitter"></i></a></li>
+          <li><a class="faicon-vk" href="#"><i class="fab fa-vk"></i></a></li>
+        </ul>
+        {% comment %} <p class="nospace">Sed pellentesque in nisi nulla facilisi sed pretium duis varius ut ut.</p> {% endcomment %}
+      </div>
+      <hr class="btmspace-50">
+      {% comment %}
+      <div class="one_quarter first">
+        <h6 class="heading">Feedback</h6>
+        <a href="mailto: harshpbhardwaj@protonmail.com?subject=tlogs &body= "> Email me! </a> 
+        <p class="nospace btmspace-15">Any s .</p> 
+        <form action="mailto: harshpbhardwaj@protonmail.com" method="get">
+          <fieldset>
+            <legend>Feedback:</legend>
+            <input class="btmspace-15" type="text" name="subject" placeholder="Name">
+            <input class="btmspace-15" type="text" name="mail" value="" placeholder="Email"> 
+            <textarea class="btmspace-15" name="body" placeholder="Write your feedback here."></textarea>
+            <button type="submit" value="submit">Submit</button>
+          </fieldset>
+        </form>
+      </div>
+      {% endcomment %}
+      <div class="one_quarter">
+        <h6 class="heading">Top Tlogs This Month</h6>
+        <ul class="nospace linklist">
+          {% for i in monthly_top %}
+          <li>
+            <article>
+              <p class="nospace btmspace-10"><a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">{{ i.title }}</a></p>
+              <time class="block font-xs" datetime="2045-04-06">
+                {{ i.date|date:'M' }}, {{ i.date|date:'d' }}
+                {% comment %} <sup>
+                  {% if int(str(i.date)[-1:]) in [4,5,6,7,8,9,0] or int(str(i.date)[-2:]) in [11,12,13] %}th {% elif int(str(i)[-1:]) == 1 %}st {% elif int(str(i)[-1:]) == 2 %}nd {% elif int(str(i)[-1:]) == 3 %}rd {% endif %}
+                </sup> {% endcomment %}
+                {{ i.date|date:'F Y' }}
+              </time>
+            </article>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="one_quarter">
+        <h6 class="heading">Top Writers</h6>
+        <ul class="nospace linklist">
+          {% for i in top_users %}
+          <li><a href="{{ request.scheme }}://{{ request.get_host }}/profile/{{ i.email }}">{{ i.email }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% comment %} <div class="one_quarter">
+        <h6 class="heading">Our Partner Companies</h6>
+        <ul class="nospace clear latestimg">
+          <li><a class="imgover" href="#"><img src="{% static 'images/demo/100x100.png' %}" alt=""></a></li>
+          <li><a class="imgover" href="#"><img src="{% static 'images/demo/100x100.png' %}" alt=""></a></li>
+        </ul>
+      </div>{% endcomment %}
+    </footer>
+  </div>
+  <div class="wrapper row5">
+    <div id="copyright" class="hoc clear">
+      <p class="fl_left">Copyright &copy; 2022 - All Rights Reserved - <a href="#">HExDEx</a></p>
+    </div>
+  </div>
+  <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
+  <script src="{% static 'layout/scripts/jquery.min.js' %}"></script>
+  <script src="{% static 'layout/scripts/jquery.backtotop.js' %}"></script>
+  <script src="{% static 'layout/scripts/jquery.mobilemenu.js' %}"></script>
+</body>
+
+</html>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="/home">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputEmail4">Email</label>
+              <input type="hidden" name="type" value="signin">
+              <input type="email" name="email" class="form-control" id="inputEmail4" placeholder="Email">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputPassword4">Password</label>
+              <input type="password" name="password" class="form-control" id="inputPassword4" placeholder="Password">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Sign in</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#myModal2">Not Registered Yet</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal 2 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel2">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/home">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="fname">First Name</label>
+              <input type="text" class="form-control" name="fname" id="fname" placeholder="First Name">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="lname">Last Name</label>
+              <input type="text" class="form-control" name="lname" id="lname" placeholder="Last Name">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputEmail4">Email</label>
+              <input type="hidden" name="type" value="signup">
+              <input type="email" class="form-control" name="email" id="inputEmail4" placeholder="Email">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputphone4">Phone</label>
+              <input type="text" class="form-control" name="phone" id="inputphone4" placeholder="phone">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputPassword4">Password</label>
+              <input type="password" class="form-control" name="password" id="inputPassword4" placeholder="Password">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputPassword5">Confirm Password</label>
+              <input type="password" class="form-control" name="cpassword" id="inputPassword5" placeholder="Password">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="inputCity">City</label>
+              <input type="text" class="form-control" name="city" id="inputCity">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputState">State</label>
+              <select id="inputState" class="form-control" name="state">
+                <option selected value="0">Choose...</option>
+                <option value="uttar pradesh">...</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputCountry">Country</label>
+              <input type="text" class="form-control" name="country" id="inputCountry">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <label class="form-check-label" for="gridCheck">
+                Check me out
+                <input class="form-check-input" type="checkbox" name="terms" id="gridCheck" required>
+              </label>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Sign up</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ request.user.is_authenticated|json_script:"is_auth" }}
+<script>
+  function newtextarea() {
+    document.getElementById('new_body_text').style.display = "block";
+  }
+  function edit_title() {
+    document.getElementById('title').value = document.getElementById('title_tag').innerHTML;
+    document.getElementById('title_h').style.display = "none";
+    document.getElementById('title').style.display = "block";
+    $("input[name=title]").focus();
+  }
+  function body_edit(n) {
+    document.getElementById('para_edit_' + n).value = document.getElementById('para_' + n).innerHTML;
+    document.getElementById('para_' + n).style.display = "none";
+    document.getElementById('para_edit_' + n).style.display = "block";
+    document.getElementById('para_edit_' + n).focus();
+  }
+  function body_save(n) {
+    var html_div_id = "para_" + n;
+    var new_data = document.getElementById('para_edit_' + n).value;
+    var old_data = document.getElementById('para_' + n).innerHTML;
+    if (new_data != old_data) {
+      var formData = {
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'para_edit_text': new_data,
+        't_id': $('input[name=t_id]').val(),
+        'b_id': n
+      };
+      save_data(formData, html_div_id);
+    }
+    document.getElementById('para_' + n).style.display = "block";
+    document.getElementById('para_edit_' + n).style.display = "none";
+  }
+  function save_data(formData, html_div_id) {
+    if (JSON.parse(document.getElementById('is_auth').textContent)) {
+      var html_div_content = $("#" + html_div_id).html();
+      $("#" + html_div_id).html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+
+      $.ajax({
+        url: "/add_new_tlog",
+        type: "post",
+        data: formData,
+        success: function (d) {
+          console.log(d.mystring);
+          var html = '';
+          if (html_div_id !='title_tag') {
+            html = html_div_content;
+          }
+          html = html + d.mystring;
+          $("#" + html_div_id).html(html);
+          if(d.tbody_id != ""){
+            $("#tbody_id").html(d.tbody_id);
+          }
+        }
+      });
+    } else {
+      alert("Sign in first!");
+    }
+  }
+
+  $(document).ready(function () {
+    $("#next").click(function () {
+      if ($('input[name=t_id]').val()==0) {
+        if (JSON.parse(document.getElementById('is_auth').textContent)) {
+          document.getElementById('title_tag').innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+          document.getElementById('title_tag').style.display = "block";
+          document.getElementById('title').style.display = "none";
+          var formData = {
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'title': $('input[name=title]').val()
+          };
+          console.log(formData);
+
+          $.ajax({
+            url: "/add_new_tlog",
+            type: "post",
+            data: formData,
+            success: function (d) {
+              //console.log("hi");
+              $("#title_tag").html(d.mystring);
+              $("#t_id").val(d.t_id);
+              document.getElementById('add_body').style.display = "block";
+              document.getElementById('next').style.display = "none";
+            }
+          });
+        } else {
+          alert("Sign in first!");
+        }
+      }
+    });
+    $("#new_body_text").blur(function () {
+      var html_div_id = "tlog_contents";
+      var formData = {
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'body_title': $('input[name=title]').val(),
+        'new_body_text': $('textarea#' + 'new_body_text').val(),
+        't_id': $('input[name=t_id]').val()
+      };
+      save_data(formData, html_div_id);
+      document.getElementById('new_body_text').style.display = "none";
+      document.getElementById('new_body_text').value = "";
+    });
+    $("#title").blur(function () {
+      if ($('input[name=t_id]').val()!=0) {
+        var html_div_id = "title_tag";
+        var formData = {
+          'csrfmiddlewaretoken': '{{ csrf_token }}',
+          'new_title': $('input[name=title]').val(),
+          't_id': $('input[name=t_id]').val()
+        };
+        save_data(formData, html_div_id);
+        document.getElementById('title_h').style.display = "block";
+        document.getElementById('title').style.display = "none";
+      }
+    });
+
+    $("#image_file").change(function () {
+      var fcnt = $('#filecount').val();
+      var imgclean = $('#image_file');
+      console.log("hi1");
+      if (fcnt <= 5) {
+        formData = new FormData();
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        formData.append('body_title', $('input[name=title]').val());
+        formData.append('file', $('#image_file')[0].files[0]);
+        formData.append('t_id', $('input[name=t_id]').val());
+  
+        var imgname = $('input[type=file]').val();
+        var size = $('#image_file')[0].files[0].size;
+  
+        var ext = imgname.substr((imgname.lastIndexOf('.') + 1));
+        if (ext == 'jpg' || ext == 'jpeg' || ext == 'png' || ext == 'gif' || ext == 'PNG' || ext == 'JPG' || ext == 'JPEG') {
+          if (size <= 1000000) {
+            $.ajax({
+              url: "/add_new_tlog",
+              type: "post",
+              data: formData,
+              enctype: 'multipart/form-data',
+              processData: false,  // tell jQuery not to process the data
+              contentType: false,   // tell jQuery not to set contentType
+              success: function (d) {
+                console.log(d.mystring);
+                var html = $("#" + 'tlog_contents').html() + d.mystring;
+                $("#" + 'tlog_contents').html(html);
+              },
+              error: function(d){
+                alert("fail");
+              }
+            });
+            return false;
+          }//end size
+          else {
+            imgclean.replaceWith(imgclean = imgclean.clone(true));//Its for reset the value of file type
+            alert('Sorry File size exceeding from 1 Mb');
+          }
+        }//end FILETYPE
+        else {
+          imgclean.replaceWith(imgclean = imgclean.clone(true));
+          alert('Sorry Only you can uplaod JPEG|JPG|PNG|GIF file type ');
+        }
+      }//end filecount
+      else {
+        imgclean.replaceWith(imgclean = imgclean.clone(true));
+        alert('You Can not Upload more than 6 Photos');
+      }
+    });
+  });
+</script>
+<!-- Modal 4 -->
+<div class="modal fade bd-example-modal-lg" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" id="tlogingsteps4">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel4">TLoging</h5>
+        <button type="button" class="close  float-right" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/home">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <h2 id="title_h" style="display:block;">
+                <span id="title_tag" style="display:none;" onclick="edit_title();"></span>
+              </h2>
+              <input type="text" style="display:block;" class="form-control" name="title" id="title"
+                placeholder="Enter Title For Your TLog">
+              <button type="button" name="next" id="next" class="btn btn-primary">Next</button>
+              <input type="hidden" name="t_id" id="t_id" value="0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" id="tlog_contents">
+              <!-- <p class="lead" id="para_1" onclick="body_edit(1);" style="font-size:16px;">
+                ghh
+              </p>
+              <textarea class="form-control" id="para_edit_1" onblur="body_save(1);" style="display:none;" rows="7" name="para_edit_1"></textarea>
+              <img src="/media/wallpaperflare.com_wallpaper%20(1).jpg" style="max-height: 200px;" alt=""> -->
+            </div>
+            <div class="form-group">
+              {% comment %} <label for="new_body_text" class="col-form-label">Body:</label> {% endcomment %}
+              <textarea class="form-control" style="display:none;" rows="7" name="new_body_text" id="new_body_text"></textarea>
+            </div>
+          </div>
+          <div class="form-row" id="add_body" style="display:none;">
+            <div class="form-group col-md-6">
+              <label for="image_file" style="background-color:#eaeaea;" class="form-label">+Add Image <i
+                  class="fa fa-upload" aria-hidden="true"></i></label>
+              <input class="form-control form-control-sm" style="display:none;" id="image_file" type="file" accept="image/png, image/jpeg">
+              <input type="hidden" id="filecount" value='0'>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="new_body_text2" style="background-color:#eaeaea;" onclick="newtextarea();"
+                class="form-label">+Add Paragraph <i class="fa-duotone fa-pen-field"></i></label>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer" id="save_button" style="display: none;">
+        <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel4">TLoging</h5>
+          <button type="button" class="close  float-right" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="/home">
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <h2 id="title_h" style="display:block;">
+                  <span id="title_tag" onclick="edit_title();">{{title}}</span>
+                </h2>
+                <input type="text" style="display:none;" class="form-control" name="title" id="title" placeholder="Enter Title For Your TLog">
+                <button type="button" name="next" id="next" class="btn btn-primary">Next</button>
+                <input type="hidden" name="t_id" id="t_id" value="{{t_id}}">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group" id="tlog_contents">
+                <p class="lead" id="para_1" onclick="body_edit(1);" style="font-size:16px;">
+                </p>
+                <textarea class="form-control" id="para_edit_1" onblur="body_save(1);" style="display:none;" rows="7" name="para_edit_1"></textarea>
+              </div>
+              <div class="form-group">
+                {% comment %} <label for="new_body_text" class="col-form-label">Body:</label> {% endcomment %}
+                <textarea class="form-control" style="display:none;" rows="7" name="new_body_text" id="new_body_text"></textarea>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="image_file" style="background-color:#eaeaea;" class="form-label">+Add Image <i
+                    class="fa fa-upload" aria-hidden="true"></i></label>
+                <input class="form-control form-control-sm" style="display:none;" id="image_file" type="file" accept="image/png, image/jpeg">
+                <input type="hidden" id="filecount" value='0'>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="new_body_text2" style="background-color:#eaeaea;" onclick="newtextarea();"
+                  class="form-label">+Add New Paragraph <i class="fa-duotone fa-pen-field"></i></label>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" style="display:none;" class="btn btn-primary">Save</button>
+          </form>
+        </div>
