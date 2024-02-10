@@ -71,7 +71,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'HexaBlogs.wsgi.application'
+# WSGI_APPLICATION = 'HexaBlogs.wsgi.application'
+WSGI_APPLICATION = 'HexaBlogs.wsgi.app'
 
 
 # Database
