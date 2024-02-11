@@ -19,6 +19,21 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
   <link href="{% static '/layout/styles/layout.css' %}" rel="stylesheet" type="text/css" media="all">
+  <style>
+    .close{
+      margin-left:auto;
+    }
+    body.modal-open .hoc{
+      -webkit-filter: blur(4px);
+      -moz-filter: blur(4px);
+      -o-filter: blur(4px);
+      -ms-filter: blur(4px);
+      filter: blur(4px);
+    }
+    [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled){
+      float: right;
+    }
+  </style>
   <!-- <script>
   $('#myModal').on('shown.bs.modal', function () {
   $('#myInput').trigger('focus')
@@ -129,7 +144,7 @@
     </section>
     
     {% block body %}{% endblock body %}
-    
+  </div>  
   <div class="bgded overlay row4" style="background-image:url('images/demo/backgrounds/01.png');">
     <footer id="footer" class="hoc clear">
       <div class="center btmspace-50">
@@ -214,7 +229,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="myModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="myModalLabel">Sign In</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -247,7 +262,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="myModalLabel2">Modal title</h5>
+        <h5 class="modal-title" id="myModalLabel2">Sign Up</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -282,21 +297,21 @@
               <input type="password" class="form-control" name="cpassword" id="inputPassword5" placeholder="Password">
             </div>
           </div>
-          <div class="form-row">
+          <div class="form-row" style="display: none;">
             <div class="form-group col-md-4">
               <label for="inputCity">City</label>
-              <input type="text" class="form-control" name="city" id="inputCity">
+              <input type="text" class="form-control" name="city" value="delhi_default" id="inputCity">
             </div>
             <div class="form-group col-md-4">
               <label for="inputState">State</label>
               <select id="inputState" class="form-control" name="state">
                 <option selected value="0">Choose...</option>
-                <option value="uttar pradesh">...</option>
+                <option value="delhi_default">...</option>
               </select>
             </div>
             <div class="form-group col-md-4">
               <label for="inputCountry">Country</label>
-              <input type="text" class="form-control" name="country" id="inputCountry">
+              <input type="text" class="form-control" name="country" value="india_default" id="inputCountry">
             </div>
           </div>
           <div class="form-group">
@@ -307,9 +322,9 @@
               </label>
             </div>
           </div>
+          <button type="submit" class="btn btn-primary">Sign up</button>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Sign up</button>
         </form>
       </div>
     </div>

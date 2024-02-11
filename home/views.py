@@ -50,6 +50,28 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset=Tlog_comment.objects.all()
     serializer_class=CommentSerializers
 
+def get_this_month():
+    this_month = Tlogs.objects.filter( date__gte = datetime.now() - timedelta(days=28)).order_by('-views').values()[:2]
+    return make_tlog_body(this_month)
+
+def get_top_users():
+    # First, create a subquery to calculate the sum of views for each email
+    email_counts = Tlogs.objects.values('email').annotate(email_count=Count('email')).order_by('-email_count')
+    # Then, annotate the main queryset with the rank of each email based on the sum of views
+    top_3_emails = list(email_counts.values_list('email', flat=True)[:3])
+    top_users = []
+    for email in top_3_emails:
+        top_users.append(list(Login.objects.filter( email=email ).values()[:1])[0])
+    return top_users
+    
+def add_to_footer(context):
+    a = {
+            "top_users": get_top_users(),
+            "monthly_top": get_this_month()
+        }
+    context.update(a)
+    return context
+
 
 # Create your views here.
 def index(request):
@@ -60,18 +82,9 @@ def index(request):
     trending_tlogs = make_tlog_body(trending)
     this_week = Tlogs.objects.filter( date__gte = datetime.now() - timedelta(days=7)).order_by('-views').values()[:2]
     weekly_top = make_tlog_body(this_week)
-    this_month = Tlogs.objects.filter( date__gte = datetime.now() - timedelta(days=28)).order_by('-views').values()[:2]
-    monthly_top = make_tlog_body(this_month)
+
     
 
-    # First, create a subquery to calculate the sum of views for each email
-    email_counts = Tlogs.objects.values('email').annotate(email_count=Count('email')).order_by('-email_count')
-
-    # Then, annotate the main queryset with the rank of each email based on the sum of views
-    top_3_emails = list(email_counts.values_list('email', flat=True)[:3])
-    top_users = []
-    for email in top_3_emails:
-        top_users.append(list(Login.objects.filter( email=email ).values()[:1])[0])
 
 
     tlog_count = Tlogs.objects.all().count()
@@ -82,10 +95,9 @@ def index(request):
         'tlog_count': tlog_count,
         'users_count': users_count,
         'trending_tlogs': trending_tlogs,
-        'weekly_top':weekly_top,
-        'monthly_top':monthly_top,
-        'top_users':top_users
+        'weekly_top':weekly_top
     }
+    context = add_to_footer(context)
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -148,6 +160,7 @@ def profile(request):
             "profile" : data,
             "tlogs" : my_tlogs
         }
+        context = add_to_footer(context)
         return render(request, 'profile.html', context)    
 def profiles(request, id):
     username = None
@@ -160,6 +173,7 @@ def profiles(request, id):
             "profile" : data,
             "tlogs" : my_tlogs
         }
+        context = add_to_footer(context)
         return render(request, 'profile.html', context)
         
 
@@ -205,6 +219,7 @@ def view(request, id):
             "tlog_body" : tl_body,
             "tlog_comment" : t_comment
         }
+        context = add_to_footer(context)
         return render(request, 'view.html', context)
         # return JsonResponse(context)
 
