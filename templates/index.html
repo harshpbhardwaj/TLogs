@@ -22,10 +22,10 @@
           {% else %}
           <figure><a class="imgover" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}"><img src="{% static 'images/demo/348x220.png' %}" alt=""></a>
           {% endif %}
-            <figcaption>
+            <figcaption style="cursor:pointer;" onclick="window.location = '{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}'">
               <h6 class="heading">{{ i.title }}</h6>
               {% if i.body != '' %}
-              {{ i.body|linebreaksbr }} [&hellip;]
+              {{ i.body|linebreaksbr }} [<a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">&hellip;</a>]
               {% endif %}
             </figcaption>
           </figure>
@@ -53,7 +53,7 @@
           {% endif %}
         </a>
           <h6 class="heading">{{ i.title }}</h6>
-          <p class="btmspace-30">{{ i.body }} [&hellip;]</p>
+          <p class="btmspace-30">{{ i.body }} [<a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">&hellip;</a>]</p>
           <footer><a class="btn" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">Read More</a></footer>
         </article>
       </li>
@@ -133,8 +133,7 @@
               <li><i class="fa fa-eye"></i> <a href="#">{{i.views}}</a></li>
             </ul>
             <h6 class="heading">{{i.title}}</h6>
-            <p>{{ i.body }} [<a
-                href="#">&hellip;</a>]</p>
+            <p>{{ i.body }} [<a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">&hellip;</a>]</p>
             <footer><a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">Read More</a></footer>
           </div>
           <time datetime="2045-04-06T08:15+00:00"><strong>{{i.date.day}}</strong> <em>{{ i.date|date:'M' }}</em></time>

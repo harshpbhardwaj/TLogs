@@ -65,17 +65,30 @@
       {% for i in tlogs %}
       <li class="one_third {% if forloop.counter|add:"2"|divisibleby:"3" %} first{% endif %}" style="margin-bottom:100px;background:#eaeaea;">
         {% if request.user.username == i.email %}<div class="pull-right bg-white rounded" onclick="delete_post({{ i.t_id }})"><i class="fas fa-trash fa-lg m-2" style="color: #f66;"></i></div>{% endif %}
-        <article><a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">
+        <article ><a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}" {% if i.publish != 1 %} style="opacity:0.5;"{% endif %}>
           {% if i.image != '' %}
             <img src="{{ i.image }}" style="max-height: 120px; margin-bottom: 40px;" alt="">
           {% else %}
             <img src="{% static 'images/demo/348x220.png' %}" style="max-height: 120px; margin-bottom: 40px;" alt="">
           {% endif %}
         </a>
-          <h6 class="heading">{{ i.title }}</h6>
-          <p class="btmspace-30">{{ i.body }} [&hellip;]</p>
-          <footer><a class="btn" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">Read More</a></footer>
-        </article>
+          <h6 class="heading" {% if i.publish != 1 %} style="opacity:0.5;"{% endif %}>{{ i.title }}</h6>
+          <p class="btmspace-30" {% if i.publish != 1 %} style="opacity:0.5;"{% endif %}>{{ i.body }} [&hellip;]</p>
+          <footer>
+            <a class="btn" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">View</a>
+            {% if i.publish == 1 %}
+            <a class="btn bg-light" style="opacity:1;" onclick="manage_tlog_privacy({{ i.t_id }} , 0 )"><i class='fas fa-lock' style="color: #666;"></i></a>
+            {% else %}
+            <a class="btn bg-light" style="opacity:1;" onclick="edit_tlog({{ i.t_id }})"><i class='fas fa-edit' style="color: #666;"></i></a>
+            {% endif %}
+          </footer>
+      </article>
+          {% if i.publish != 1 %}
+      <footer class="mt-2">
+          <a class="btn bg-light" onclick="manage_tlog_privacy({{ i.t_id }} , 1 )" ><i class='fas fa-globe' style="color: #060;"></i> Publish</a>
+          {% else %}
+          {% endif %}
+        </footer>
       </li>
       {% endfor %}
     </ul>
@@ -106,6 +119,30 @@
     }else{
       location.reload();
     }
+  }
+  
+  function manage_tlog_privacy(id, publish){
+    formData = {
+      'csrfmiddlewaretoken' : '{{ csrf_token }}',
+      'tlog_id' : id,
+      'publish' : publish
+    }
+    if (JSON.parse(document.getElementById('is_auth').textContent)) {
+      $.ajax({
+        url: "/manage_tlog_privacy",
+        type: "post",
+        data: formData,
+        success: function (d) {
+          location.reload();
+        }
+      });
+    } else {
+      alert("Sign in first!");
+    }
+  }
+  
+  function edit_tlog(id){
+    window.location = "/edit_tlog/"+id;
   }
 </script>
 {% endblock body %}

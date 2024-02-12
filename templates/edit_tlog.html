@@ -1,0 +1,34 @@
+{% extends 'theme.html' %}
+{% load static %}
+{% block body %}
+<div class="wrapper row3">
+    <main class="hoc container clear"> 
+      <!-- main body -->
+      <!-- ################################################################################################ -->
+      <div class="content"> 
+        <!-- ################################################################################################ -->
+        <form method="post" action="/save_edited_tlog">
+          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+          <input type="hidden" name="tlog_id" value="{{ tlog_data.t_id }}">
+          <h1 style="font-size: 36px;">Heading:</h1><input type="text" name="title" class="form-control" value="{{ tlog_data.tlog }}">
+          <h3>Body:</h3>
+          {% for i in tlog_data.tlog_body %}
+            {% if i.body != "" %}
+              <p><textarea class="form-control" name="body[{{ i.b_id }}]" rows="6">{{ i.body }}</textarea></p>
+            {% elif i.image != "" %}
+              <img class="img{{ i.img_position }} borderedbox inspace-5" style="max-height:250px;" src="{{ i.image }}" alt="">
+            {% endif %}
+          {% endfor %}
+          <hr>
+          <button type="submit" class="btn btn-dark">Save</button>
+        </form>
+      </div>
+      <div class="clear"></div>
+    </main><br>
+    <main class="hoc container clear"> 
+      <!-- ################################################################################################ -->
+      <!-- / main body -->
+      <div class="clear"></div>
+    </main>
+  </div>
+{% endblock body %}

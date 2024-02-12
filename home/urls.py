@@ -29,6 +29,9 @@ urlpatterns = [
     path("about", views.about, name='about'),
     path("contact", views.contact, name='contact'),
 
+    path('post', views.post, name='post'),
+    path('edit_tlog/<id>', views.edit_tlog, name='edit_tlog'),
+    path('save_edited_tlog', views.save_edited_tlog, name='save_edited_tlog'),
 
     # form posts
     path("add_new_comment", views.add_new_comment, name='add_new_comment'),
@@ -36,6 +39,8 @@ urlpatterns = [
     # ajax links
     path("add_new_tlog", views.add_new_tlog, name='add_new_tlog'),
     path("delete_tlog", views.delete_tlog, name='delete_tlog'),
+    path("manage_tlog_privacy", views.manage_tlog_privacy, name='manage_tlog_privacy'),
+
 
     # rest api
     path('rest/', include(router.urls))

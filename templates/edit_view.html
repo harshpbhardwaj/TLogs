@@ -1,0 +1,29 @@
+{% extends 'theme.html' %}
+{% load static %}
+{% block body %}
+<div class="wrapper row3">
+    <main class="hoc container clear"> 
+      <!-- main body -->
+      <!-- ################################################################################################ -->
+      <div class="content"> 
+        <!-- ################################################################################################ -->
+        <h1 style="font-size: 36px;">{% lorem 5 w random %}</h1>
+        <p>11{% lorem 4 b random %}</p>
+        <img class="imgr borderedbox inspace-5" style="max-height:250px;" src="https://picsum.photos/id/869/600/400/?blur" alt="">
+        <p>33{% lorem 4 b random %}</p>
+        <h3>{% lorem 3 w random %}</h3>
+        <p>44{% lorem 4 b random %}</p>
+        <img class="img borderedbox inspace-5" style="max-height:250px;" src="https://picsum.photos/id/1068/600/400/?blur=2" alt="">
+        <img class="img borderedbox inspace-5" style="max-height:250px;" src="https://picsum.photos/id/1068/600/400/?blur=2" alt="">
+        <h3>{% lorem 2 w random %}</h3>
+        <p>77{% lorem 4 b random %}</p>
+      </div>
+      <div class="clear"></div>
+    </main><br>
+    <main class="hoc container clear"> 
+      <!-- ################################################################################################ -->
+      <!-- / main body -->
+      <div class="clear"></div>
+    </main>
+  </div>
+{% endblock body %}

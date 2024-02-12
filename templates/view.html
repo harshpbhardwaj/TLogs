@@ -14,11 +14,7 @@
                 <p>{{ i.body }}</p>
               {% endautoescape off %}
             {% elif i.image != "" %}
-                {% if i.id|divisibleby:"2" %}
-                <img class="imgr borderedbox inspace-5" style="max-height:250px;" src="{{ i.image }}" alt="">
-                {% else %}
-                <img class="imgl borderedbox inspace-5" style="max-height:250px;" src="{{ i.image }}" alt="">
-                {% endif %}
+                <img class="img{{ i.img_position }} borderedbox inspace-5" style="max-height:250px;" src="{{ i.image }}" alt="">
             {% endif %}
         {% endfor %}
       </div>

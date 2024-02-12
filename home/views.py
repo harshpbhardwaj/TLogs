@@ -51,12 +51,12 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class=CommentSerializers
 
 def get_this_month():
-    this_month = Tlogs.objects.filter( date__gte = datetime.now() - timedelta(days=28)).order_by('-views').values()[:2]
+    this_month = Tlogs.objects.filter(publish=1).filter( date__gte = datetime.now() - timedelta(days=28)).order_by('-views').values()[:2]
     return make_tlog_body(this_month)
 
 def get_top_users():
     # First, create a subquery to calculate the sum of views for each email
-    email_counts = Tlogs.objects.values('email').annotate(email_count=Count('email')).order_by('-email_count')
+    email_counts = Tlogs.objects.filter(publish=1).values('email').annotate(email_count=Count('email')).order_by('-email_count')
     # Then, annotate the main queryset with the rank of each email based on the sum of views
     top_3_emails = list(email_counts.values_list('email', flat=True)[:3])
     top_users = []
@@ -76,18 +76,18 @@ def add_to_footer(context):
 # Create your views here.
 def index(request):
     # data = Tlogs.objects.filter(publish=1).order_by('-id').values()[:6]
-    data = Tlogs.objects.order_by('-id').values()[:6]
+    data = Tlogs.objects.filter(publish=1).order_by('-id').values()[:6]
     my_data = make_tlog_body(data)
-    trending = Tlogs.objects.filter( date__gte = datetime.now() - timedelta(days=10)).order_by('-views').values()[:3]
+    trending = Tlogs.objects.filter(publish=1).filter( date__gte = datetime.now() - timedelta(days=10)).order_by('-views').values()[:3]
     trending_tlogs = make_tlog_body(trending)
-    this_week = Tlogs.objects.filter( date__gte = datetime.now() - timedelta(days=7)).order_by('-views').values()[:2]
+    this_week = Tlogs.objects.filter(publish=1).filter( date__gte = datetime.now() - timedelta(days=7)).order_by('-views').values()[:2]
     weekly_top = make_tlog_body(this_week)
 
     
 
 
 
-    tlog_count = Tlogs.objects.all().count()
+    tlog_count = Tlogs.objects.filter(publish=1).all().count()
     users_count = Login.objects.all().count()
     
     context = {
@@ -119,34 +119,30 @@ def index(request):
                 user.save()
                 messages.success(request, 'Hello '+fname+' '+lname+', username '+email+' is added')
             else:
-                messages.success(request, 'Incorrect Password!')
+                messages.danger(request, 'Incorrect Password!')
         else:
             user = authenticate(username=email, password=password)
             if user is not None:
                 login(request, user)
-                # messages.success(request, 'Hello '+email)
             else:
-                messages.success(request, 'Incorrect email or password!')
+                messages.warning(request, 'Incorrect Email or Password!')
         return redirect('/')
     return render(request, 'index.html', context)
     # return JsonResponse({'data':context})
 
 def sign_out(request):
     logout(request)
-    messages.success(request, 'User signed out!')
+    messages.secondary(request, 'User signed out!')
     return redirect('/')
 
 def about(request):
-    return render(request, 'pages/basic-grid.html')
+    return redirect('/')
+    # return render(request, 'pages/basic-grid.html')
 
 
 def contact(request):
-    context = {
-        "variable1" : "window",
-        "variable2" : "umbrella",
-        "variable3" : "cat"
-    }
-    return render(request, 'pages/basic-grid.html', context)
+    return redirect('/')
+    # return render(request, 'pages/basic-grid.html')
 
     
 def profile(request):
@@ -167,7 +163,7 @@ def profiles(request, id):
     if request.user.is_authenticated:
         username = id
         data = Login.objects.filter(email = username).values()[:1][0]
-        t_data = Tlogs.objects.filter(email = username).order_by('-id').values()
+        t_data = Tlogs.objects.filter(publish=1).filter(email = username).order_by('-id').values()
         my_tlogs = make_tlog_body(t_data)
         context = {
             "profile" : data,
@@ -175,44 +171,53 @@ def profiles(request, id):
         }
         context = add_to_footer(context)
         return render(request, 'profile.html', context)
+    messages.warning(request, 'Login first')
+    return redirect('/')
         
 
 def view(request, id):
     username = None
     can_view = True
-    # can_view = request.user.is_authenticated:
+    # can_view = request.user.is_authenticated
     if can_view:
-        t_data = Tlogs.objects.filter(id = id).values()[0]
-        t_body = Tlog_body.objects.filter(tlog_id = id).values()
-        t_comment = Tlog_comment.objects.filter(tlog_id = id).values()
-        Tlogs.objects.filter(id = id).update(views=F("views") + 1)
+        if request.user.is_authenticated:
+            email = request.user.username
+            t_data = Tlogs.objects.filter(id = id).values()[0]
+            t_body = Tlog_body.objects.filter(tlog_id = id).values()
+            t_comment = Tlog_comment.objects.filter(tlog_id = id).values()
+        else:
+            t_data = Tlogs.objects.filter(publish=1).filter(id = id).values()[0]
+            t_body = Tlog_body.objects.filter(publish=1).filter(tlog_id = id).values()
+            t_comment = Tlog_comment.objects.filter(publish=1).filter(tlog_id = id).values()
+        Tlogs.objects.filter(publish=1).filter(id = id).update(views=F("views") + 1)
         tl_body = []
         pattern = r'\*\*(.*?)\*\*'
+        j = 0
         for x in t_body:
-            # body1 = x["body"].splitlines()
-            # body2 = []
-            # for i in body1:
-            #     if i.startswith('##'):
-            #         j = "<h3>" + i[2:] + "</h3>"
-            #         body2.append(j)
-            #     else:
-            #         body2.append(i)
-            # text = " ".join(body2)
             text_bold = re.sub(pattern, r'<b>\1</b>', x["body"])
             pattern_heading = r'(?m)^##(.*?)$'
             body_head = re.sub(pattern_heading, r'<br><h3>\1</h3>', text_bold)
             result = body_head.replace('\n', '<br>')
             rst = result.replace("</h3><br><br>", "</h3>").replace("</h3><br>", "</h3>").replace("<br><br><h3>", "<h3>")
+            img_position = "r"
+            if x['image'] != '':
+                if j > 0:
+                    if t_body[j-1]['image'] != '':
+                        img_position = ""
+                if (j+1) < len(t_body):
+                    if t_body[j+1]['image'] != '':
+                        img_position = ""
             tl_body.append({
                 'id':x['id'],
                 'tlog_id':x['tlog_id'],
                 "body":rst,
                 'image':x['image'],
+                'img_position':img_position,
                 'email':x['email'],
                 'title':x['title'],
                 'date':x['date']
                 })
-        print(tl_body[0])
+            j = j+1
         context = {
             "t_id" : id,
             "tlog" : t_data,
@@ -221,6 +226,17 @@ def view(request, id):
         }
         context = add_to_footer(context)
         return render(request, 'view.html', context)
+        # return JsonResponse(context)
+
+def post(request):
+    username = None
+    can_view = True
+    # can_view = request.user.is_authenticated:
+    context = {
+        "a":"a"
+    }
+    if can_view:
+        return render(request, 'edit_view.html', context)
         # return JsonResponse(context)
 
 
@@ -254,7 +270,8 @@ def make_tlog_body(data):
                 'date': x['date'],
                 'body': " ".join(body3.split(".")[0:1]),
                 # 'body' : " ".join(body2),
-                'image': image
+                'image': image,
+                'publish': x['publish']
             }
         )
     return my_data
@@ -276,7 +293,7 @@ def add_new_comment(request):
         else:
             return redirect('/')
     else:
-        messages.success(request, 'Login First!')
+        messages.warning(request, 'Login First!')
         return redirect('/')
 
 # ajax links
@@ -343,8 +360,69 @@ def add_new_tlog(request):
 def delete_tlog(request):
     if (request.user.is_authenticated)*(request.method == "POST"):
         email = request.user.username
-        #create new tlog
         if request.POST.get("confirmation"):
             t_id = request.POST.get("tlog_id")
             done = Tlogs.objects.get(id=t_id, email=email).delete()
             return JsonResponse({'deleted':done})
+            
+def manage_tlog_privacy(request):
+    if (request.user.is_authenticated)*(request.method == "POST"):
+        email = request.user.username
+        id = request.POST.get("tlog_id")
+        publish = request.POST.get("publish")
+        update = Tlogs.objects.filter(id=id, email=email).update(publish=publish)
+        print(update)
+        if update:
+            return JsonResponse({'status':1,'update':update})
+            
+def edit_tlog(request, id):
+    if request.user.is_authenticated:
+        email = request.user.username
+        t_data = Tlogs.objects.filter(id = id, email= email).values()[0]
+        t_body = Tlog_body.objects.filter(tlog_id = id, email= email).values()
+        body = []
+        j = 0
+        for i in t_body:
+            img_position = "r"
+            if i['image'] != '':
+                if j > 0:
+                    if t_body[j-1]['image'] != '':
+                        img_position = ""
+                if (j+1) < len(t_body):
+                    if t_body[j+1]['image'] != '':
+                        img_position = ""
+            body.append({
+                'b_id':i['id'],
+                'body':i['body'],
+                'image':i['image'],
+                'img_position':img_position
+            })
+            j = j + 1
+        tlog_data = {
+            "t_id" : id,
+            "tlog" : t_data['title'],
+            "tlog_body" : body
+        }
+        context = {
+            'tlog_data': tlog_data
+        }
+        context = add_to_footer(context)
+        # return JsonResponse(context)
+        return render(request, 'edit_tlog.html', context)
+
+def save_edited_tlog(request):
+    if (request.user.is_authenticated)*(request.method == "POST"):
+        email = request.user.username
+        id = request.POST.get("tlog_id")
+        title = request.POST.get('title')
+        t_data = Tlogs.objects.filter(id = id, email= email).values()[0]
+        t_body = Tlog_body.objects.filter(tlog_id = id, email= email).values()
+        for i in t_body:
+            if i['body'] != "":
+                input_name = 'body['+str(i["id"])+']'
+                body = request.POST.get(input_name)
+                update = Tlog_body.objects.filter(id = i['id']).update(body=body)
+        update = Tlogs.objects.filter(id=t_data['id'], email=email).update(title=title)
+        if update:
+            return JsonResponse({'status':1,'update':update})
+    return JsonResponse({'status':0,'update':"Something went wrong!"})
