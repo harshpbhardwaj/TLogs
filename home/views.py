@@ -186,9 +186,14 @@ def view(request, id):
             t_body = Tlog_body.objects.filter(tlog_id = id).values()
             t_comment = Tlog_comment.objects.filter(tlog_id = id).values()
         else:
-            t_data = Tlogs.objects.filter(publish=1).filter(id = id).values()[0]
-            t_body = Tlog_body.objects.filter(publish=1).filter(tlog_id = id).values()
-            t_comment = Tlog_comment.objects.filter(publish=1).filter(tlog_id = id).values()
+            t_data = Tlogs.objects.filter(publish=1).filter(id = id).values()
+            if len(t_data) == 0:
+                messages.warning(request, "Can't access!")
+                return redirect('/')
+            else:
+                t_data = t_data[0]
+            t_body = Tlog_body.objects.filter(tlog_id = id).values()
+            t_comment = Tlog_comment.objects.filter(tlog_id = id).values()
         Tlogs.objects.filter(publish=1).filter(id = id).update(views=F("views") + 1)
         tl_body = []
         pattern = r'\*\*(.*?)\*\*'
@@ -423,6 +428,4 @@ def save_edited_tlog(request):
                 body = request.POST.get(input_name)
                 update = Tlog_body.objects.filter(id = i['id']).update(body=body)
         update = Tlogs.objects.filter(id=t_data['id'], email=email).update(title=title)
-        if update:
-            return JsonResponse({'status':1,'update':update})
-    return JsonResponse({'status':0,'update':"Something went wrong!"})
+    return redirect('/profile')
