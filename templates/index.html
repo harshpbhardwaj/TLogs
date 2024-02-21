@@ -16,7 +16,7 @@
     <section id="introblocks">
       <ul class="nospace group">
         {% for i in tlogs %}
-        <li class="one_third">
+        <li class="one_third hover_effect_p">
           {% if i.image != '' %}
           <figure><a class="imgover" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}"><img src="{{ i.image }}" alt=""></a>
           {% else %}

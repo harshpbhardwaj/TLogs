@@ -14,9 +14,9 @@
           <h3>Body:</h3>
           {% for i in tlog_data.tlog_body %}
             {% if i.body != "" %}
-              <p><textarea class="form-control" name="body[{{ i.b_id }}]" rows="6">{{ i.body }}</textarea></p>
+              <p><textarea class="form-control" id="body_{{ i.b_id }}" name="body[{{ i.b_id }}]" rows="6">{{ i.body }}</textarea></p>
             {% elif i.image != "" %}
-              <img class="img{{ i.img_position }} borderedbox inspace-5" style="max-height:250px;" src="{{ i.image }}" alt="">
+              <img class="img{{ i.img_position }} borderedbox inspace-5" style="max-height:150px;" src="{{ i.image }}" alt="">
             {% endif %}
           {% endfor %}
           <hr>

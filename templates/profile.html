@@ -63,7 +63,7 @@
     </div>
     <ul class="nospace group center">
       {% for i in tlogs %}
-      <li class="one_third {% if forloop.counter|add:"2"|divisibleby:"3" %} first{% endif %}" style="margin-bottom:100px;background:#eaeaea;">
+      <li class="one_third hover_effect_p {% if forloop.counter|add:"2"|divisibleby:"3" %} first{% endif %}" style="margin-bottom:100px;background:#eaeaea;">
         {% if request.user.username == i.email %}<div class="pull-right bg-white rounded" onclick="delete_post({{ i.t_id }})"><i class="fas fa-trash fa-lg m-2" style="color: #f66;"></i></div>{% endif %}
         <article ><a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}" {% if i.publish != 1 %} style="opacity:0.5;"{% endif %}>
           {% if i.image != '' %}

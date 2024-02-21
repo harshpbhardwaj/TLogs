@@ -117,7 +117,7 @@ def index(request):
                 user.first_name = fname
                 user.last_name = lname
                 user.save()
-                messages.success(request, 'Hello '+fname+' '+lname+', username '+email+' is added')
+                messages.success(request, 'Congrats! '+fname+' '+lname+', You are a registered user now.')
             else:
                 messages.danger(request, 'Incorrect Password!')
         else:
@@ -132,7 +132,7 @@ def index(request):
 
 def sign_out(request):
     logout(request)
-    messages.secondary(request, 'User signed out!')
+    messages.info(request, 'User signed out!')
     return redirect('/')
 
 def about(request):

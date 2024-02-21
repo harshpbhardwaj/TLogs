@@ -33,6 +33,14 @@
     [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled){
       float: right;
     }
+    .hover_effect_p {
+      padding: 10px;
+      {% comment %} box-shadow: 0px 0px 15px #ccc; {% endcomment %}
+      border-radius: 5px;
+    }
+    .hover_effect_p:hover {
+      box-shadow: 5px 10px 15px #ccc;
+    }
   </style>
   <!-- <script>
   $('#myModal').on('shown.bs.modal', function () {
