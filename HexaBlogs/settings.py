@@ -16,7 +16,6 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DATABASE_URL ="postgres://tlogs_user:SewlQ8vHn4TZOYiLvSKKcIrYdsKsuQj4@dpg-cn4cn58l5elc73crm4pg-a.singapore-postgres.render.com/tlogs"
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -84,8 +83,23 @@ WSGI_APPLICATION = 'HexaBlogs.wsgi.app'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+
+# DATABASE_URL ="postgres://tlogs_user:SewlQ8vHn4TZOYiLvSKKcIrYdsKsuQj4@dpg-cn4cn58l5elc73crm4pg-a.singapore-postgres.render.com/tlogs"
+# DATABASES = {
+#     "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800)
+# }
+
+
 DATABASES = {
-    "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800)
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'initial_t_logs',
+        'USER': 'harshpbhardwaj',
+        'PASSWORD': '7RucmBgCM7jvB9fCVnCT',
+        'HOST': 't-logs.c5y0eicssa4c.ap-south-1.rds.amazonaws.com',
+        'PORT': '5432'
+    }
 }
 # DATABASES = {
 #     'default': {
