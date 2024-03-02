@@ -9,10 +9,6 @@ def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'HexaBlogs.settings')
     try:
         from django.core.management import execute_from_command_line
-        # Override the default runserver command with custom host and port
-        sys.argv.append('runserver')
-        sys.argv.append('0.0.0.0:10000')  # Specify the desired host and port
-        execute_from_command_line(sys.argv)
     except ImportError as exc:
         raise ImportError(
             "Couldn't import Django. Are you sure it's installed and "
