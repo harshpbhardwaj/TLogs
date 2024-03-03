@@ -29,7 +29,19 @@
     <article class="one first"><img src="{% static 'images/demo/100x100.png' %}" alt="">
       {% comment %} <blockquote>Proin sed sapien ut convallis lectus ac magna nulla mattis purus phasellus consectetuer fermentum
         augue integer vulputate lectus vitae lorem suspendisse potenti donec suscipit.</blockquote> {% endcomment %}
-      <h6 class="heading">{{ profile.fname }} {{ profile.mname }} {{ profile.lname }}</h6>
+      {% if request.user.username == profile.email %}
+      <h6 class="heading">
+        <span id="name-output">{{ profile.fname }} {{ profile.mname }} {{ profile.lname }} <i class="fa fa-edit" onclick="edit_name('edit');"></i></span>
+        <span style="display:none;" id="name-input">
+          <input type="text" style="width:100px;margin-right:10px;" class="form-control" id="fname" value="{{ profile.fname }}"> 
+          <input type="text" style="width:100px;margin-right:10px;"  class="form-control" id="mname" value="{{ profile.mname }}"> 
+          <input type="text" style="width:100px;margin-right:10px;"  class="form-control" id="lname" value="{{ profile.lname }}"> 
+          <i class="fa fa-save" onclick="edit_name('save');"></i>
+        </span>
+      </h6>
+      {% else %}
+      <h6 class="heading"><span id="name">{{ profile.fname }} {{ profile.mname }} {{ profile.lname }}</span></h6>
+      {% endif %}
       <em>CEO of HExDEx</em>
     </article>
     <div class="wrapper row3">
@@ -94,6 +106,7 @@
     </ul>
   </section>
 </div>
+{% if request.user.username == profile.email %}
 <script>
   function delete_post(id){
     var confirmation = confirm("Want to delete?");
@@ -144,5 +157,50 @@
   function edit_tlog(id){
     window.location = "/edit_tlog/"+id;
   }
+  function edit_name(op){
+    if(op == 'edit'){
+      document.getElementById("name-output").style.display = "none";
+      document.getElementById("name-input").style.display = "inline-flex";
+    }else{
+      const spinner = `<i class="fa fa-spinner fa-spin"></i>`;
+      const edit_icon = `<i class="fa fa-edit" onclick="edit_name('edit');"></i>`;
+      const fname = document.getElementById("fname").value;
+      const mname = document.getElementById("mname").value;
+      const lname = document.getElementById("lname").value;
+      const full_name = fname + " " +mname +" " +lname;
+      document.getElementById("name-output").innerHTML = full_name + " " + spinner;
+      document.getElementById("name-output").style.display = "block";
+      document.getElementById("name-input").style.display = "none";
+      document.getElementById("fname").value = fname;
+      document.getElementById("mname").value = mname;
+      document.getElementById("lname").value = lname;
+      const data = {
+        fname: fname,
+        mname: mname,
+        lname: lname
+      }
+      $.ajax({
+        url: "/save_user_fullname",
+        type: "post",
+        contentType: 'application/json; charset=utf-8',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        data: JSON.stringify(data),
+        dataType: 'text',
+        success: function (d) {
+          if(!d){
+            location.reload();
+          }else{
+            document.getElementById("name-output").innerHTML = full_name + " " + edit_icon;
+          }
+        },
+        error: function(xhr, status, error) {
+            location.reload();
+        }
+      });
+    }  
+  }
 </script>
+{% endif %}
 {% endblock body %}

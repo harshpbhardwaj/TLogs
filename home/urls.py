@@ -40,6 +40,7 @@ urlpatterns = [
     path("add_new_tlog", views.add_new_tlog, name='add_new_tlog'),
     path("delete_tlog", views.delete_tlog, name='delete_tlog'),
     path("manage_tlog_privacy", views.manage_tlog_privacy, name='manage_tlog_privacy'),
+    path("save_user_fullname", views.save_user_fullname, name='save_user_fullname'),
 
 
     # rest api

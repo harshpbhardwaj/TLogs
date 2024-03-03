@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from home.serializers import HexaSerializers, BodySerializers, CommentSerializers
 import re
+import json
 
 class HexaViewSet(viewsets.ModelViewSet):
     queryset=Tlogs.objects.all()
@@ -429,3 +430,14 @@ def save_edited_tlog(request):
                 update = Tlog_body.objects.filter(id = i['id']).update(body=body)
         update = Tlogs.objects.filter(id=t_data['id'], email=email).update(title=title)
     return redirect('/profile')
+
+def save_user_fullname(request):
+    if (request.user.is_authenticated)*(request.method == 'POST'):
+        email = request.user.username
+        data = json.loads(request.body)
+        update = Login.objects.filter(email=email).update(**data)
+        response_data = {'message': 'User data updated successfully'}
+        if not update:
+            return False
+        return JsonResponse(response_data, status=201)
+    return False

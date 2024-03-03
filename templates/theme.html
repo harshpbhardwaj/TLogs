@@ -207,7 +207,7 @@
         <h6 class="heading">Top Writers</h6>
         <ul class="nospace linklist">
           {% for i in top_users %}
-          <li><a href="{{ request.scheme }}://{{ request.get_host }}/profile/{{ i.email }}">{{ i.email }}</a></li>
+          <li><a href="{{ request.scheme }}://{{ request.get_host }}/profile/{{ i.email }}">{{ i.fname }} {{ i.mname }} {{ i.lname }}</a></li>
           {% endfor %}
         </ul>
       </div>
