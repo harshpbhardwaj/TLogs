@@ -131,6 +131,9 @@ def index(request):
     return render(request, 'index.html', context)
     # return JsonResponse({'data':context})
 
+def maildomainverify(request):
+    return render(request, '417fe082bedd199ccad354833b2df253.txt')
+
 def sign_out(request):
     logout(request)
     messages.info(request, 'User signed out!')

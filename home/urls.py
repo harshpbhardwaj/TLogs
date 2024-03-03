@@ -41,6 +41,7 @@ urlpatterns = [
     path("delete_tlog", views.delete_tlog, name='delete_tlog'),
     path("manage_tlog_privacy", views.manage_tlog_privacy, name='manage_tlog_privacy'),
     path("save_user_fullname", views.save_user_fullname, name='save_user_fullname'),
+    path('417fe082bedd199ccad354833b2df253.txt', views.maildomainverify, name='maildomainverify'),
 
 
     # rest api
