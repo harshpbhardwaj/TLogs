@@ -132,7 +132,12 @@ def index(request):
     # return JsonResponse({'data':context})
 
 def maildomainverify(request):
-    return render(request, '417fe082bedd199ccad354833b2df253.txt')
+    filename = "417fe082bedd199ccad354833b2df253.txt"
+    content = ''
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
+    return response
+    # return render(request, '417fe082bedd199ccad354833b2df253.txt')
 
 def sign_out(request):
     logout(request)
