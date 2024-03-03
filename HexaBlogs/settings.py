@@ -85,22 +85,22 @@ WSGI_APPLICATION = 'HexaBlogs.wsgi.app'
 # }
 
 
-# DATABASE_URL ="postgres://tlogs_user:SewlQ8vHn4TZOYiLvSKKcIrYdsKsuQj4@dpg-cn4cn58l5elc73crm4pg-a.singapore-postgres.render.com/tlogs"
-# DATABASES = {
-#     "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800)
-# }
-
-
+DATABASE_URL ="postgres://tlogs_user:SewlQ8vHn4TZOYiLvSKKcIrYdsKsuQj4@dpg-cn4cn58l5elc73crm4pg-a.singapore-postgres.render.com/tlogs"
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'initial_t_logs',
-        'USER': 'harshpbhardwaj',
-        'PASSWORD': '7RucmBgCM7jvB9fCVnCT',
-        'HOST': 't-logs.c5y0eicssa4c.ap-south-1.rds.amazonaws.com',
-        'PORT': '5432'
-    }
+    "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800)
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'initial_t_logs',
+#         'USER': 'harshpbhardwaj',
+#         'PASSWORD': '7RucmBgCM7jvB9fCVnCT',
+#         'HOST': 't-logs.c5y0eicssa4c.ap-south-1.rds.amazonaws.com',
+#         'PORT': '5432'
+#     }
+# }
 # DATABASES = {
 #     'default': {
 #         "ENGINE": "django.db.backends.postgresql",
