@@ -22,7 +22,7 @@
           {% else %}
           <figure><a class="imgover" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}"><img src="{% static 'images/demo/348x220.png' %}" alt=""></a>
           {% endif %}
-            <figcaption style="cursor:pointer;" onclick="window.location = '{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}'">
+            <figcaption class="capover" style="cursor:pointer;" onclick="window.location = '{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}'">
               <h6 class="heading">{{ i.title }}</h6>
               {% if i.body != '' %}
               {{ i.body|linebreaksbr }} [<a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">&hellip;</a>]
