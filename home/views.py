@@ -21,7 +21,7 @@ import random
 from django.http import HttpRequest
 from django.utils.html import strip_tags
 from hashlib import sha256
-
+import requests
 
 class HexaViewSet(viewsets.ModelViewSet):
     queryset=Tlogs.objects.all()
@@ -83,7 +83,17 @@ def add_to_footer(context):
         }
     context.update(a)
     return context
-
+def get_news(request):
+    url = 'https://newsapi.org/v2/top-headlines'
+    params = {
+        'sources': 'techcrunch',
+        'apiKey': 'ef43d1a4318b4b35a6bca82965e8cd48'
+    }
+    response = requests.get( url, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    return False
 
 # Create your views here.
 def index(request):
@@ -108,7 +118,8 @@ def index(request):
             'tlog_count': tlog_count,
             'users_count': users_count,
             'trending_tlogs': trending_tlogs,
-            'weekly_top':weekly_top
+            'weekly_top':weekly_top,
+            'news': get_news(request)
         }
         context = add_to_footer(context)
         return render(request, 'index.html', context)

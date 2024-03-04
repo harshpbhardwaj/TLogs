@@ -44,6 +44,7 @@ urlpatterns = [
     path('maildomainverify/<id>', views.maildomainverify, name='maildomainverify'),
     path('reset-password-mail', views.reset_password_mail, name='reset_password_mail'),
     path('reset-password/<id>', views.reset_password, name='reset_password'),
+    path('news', views.get_news, name='news'),
     path('list-users', views.list_users, name='list_users'),
 
 

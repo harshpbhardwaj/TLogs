@@ -36,6 +36,38 @@
     <div class="clear"></div>
   </main>
 </div>
+
+
+<div class="wrapper row2">
+  <section class="hoc container clear">
+    <div class="sectiontitle">
+      <p class="nospace font-xs">News</p>
+      <h6 class="heading">TechCrunch</h6>
+    </div>
+    <ul class="nospace group center">
+      {% for article in news.articles|slice:":9" %}
+      <li class="one_third {% if forloop.counter|add:'-1'|divisibleby:3 %} first{% endif %}">
+        <article><a href="{{ article.url }}" target="_blank">
+            <img src="{{ article.urlToImage }}" style="max-height: 120px; margin-bottom: 40px;" alt="">
+        </a>
+          <h6 class="heading">{{ article.title }}</h6>
+          <p class="btmspace-30">
+            {{ article.description }}
+            [<a href="{{ article.url }}" target="_blank">&hellip;</a>]
+          </p>
+          <footer><a class="btn" href="{{ article.url }}" target="_blank">Read More</a></footer>
+        </article>
+      </li>
+      {% if forloop.counter|divisibleby:3 %}
+    </ul><hr>
+    <ul class="nospace group center">
+      {% endif %}
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+
+
 <div class="wrapper row2">
   <section class="hoc container clear">
     <div class="sectiontitle">

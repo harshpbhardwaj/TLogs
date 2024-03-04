@@ -105,7 +105,7 @@
     <section id="navwrapper" class="hoc clear">
       <nav id="mainav">
         <ul class="clear">
-          <li class="active"><a href="{{ request.scheme }}://{{ request.get_host }}">Home</a></li>
+          <li class="active"><a style="cursor:pointer;" href="{{ request.scheme }}://{{ request.get_host }}">Home</a></li>
           {% comment %} <li><a class="drop" href="#">Pages</a>
             <ul>
               <li><a href="pages/gallery.html">Gallery</a></li>
@@ -131,8 +131,8 @@
           </li> {% endcomment %}
           {% comment %} <li><a href="#">Link Text</a></li>
           <li><a href="#">Link Text</a></li> {% endcomment %}
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a style="cursor:pointer;" data-toggle="modal" data-target="#aboutModal">About</a></li>
+          <li><a style="cursor:pointer;" data-toggle="modal" data-target="#contactUsModal">Contact</a></li>
         </ul>
       </nav>
       {% if request.user.is_authenticated %}
@@ -235,6 +235,63 @@
 
 </html>
 <!-- Modal -->
+<!-- About Modal -->
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="aboutModalLabel">About TLogs</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><strong>TLogs</strong> stands for Technical Logs. It is a blogging website created by <strong>Er. Harsh Pratap Bhardwaj</strong>.</p>
+        <p>The platform is designed to help you document and share your technical projects and knowledge with the world. Whether it's about your latest coding project, a software development tutorial, or insights into emerging technologies, TLogs provides you with a platform to publish your content privately or publicly.</p>
+        <p>At TLogs, we believe in the power of sharing knowledge. Users can not only create their own technical logs (TLogs), but they can also read and comment on publicly available TLogs. The popularity and usefulness of TLogs are measured by views and comments, allowing users to discover the most insightful and informative content.</p>
+        <p>In addition to blogging, TLogs keeps you updated on the latest tech-related news and trends, ensuring that you stay informed about the ever-evolving world of technology.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contact Us Modal -->
+<div class="modal fade" id="contactUsModal" tabindex="-1" role="dialog" aria-labelledby="contactUsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contactUsModalLabel">Contact Us</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="contactName">Your Name</label>
+            <input type="text" class="form-control" id="contactName" placeholder="Enter your name">
+          </div>
+          <div class="form-group">
+            <label for="contactEmail">Your Email</label>
+            <input type="email" class="form-control" id="contactEmail" placeholder="Enter your email">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea class="form-control" id="message" rows="5" placeholder="Enter your message"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
