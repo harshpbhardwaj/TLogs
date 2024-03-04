@@ -87,18 +87,20 @@
       </div>
     </header>
     {% if messages %}
-    {% comment %} <ul class="messages"> {% endcomment %}
       {% for message in messages %}
-
-      <div class="alert alert-{{ message.tags }} my-0" role="alert">
-        {{ message }}
-      </div>
-
-      {% comment %} <li{% if message.tags %} class="" {% endif %}>
-        </li> {% endcomment %}
-        {% endfor %}
-        {% comment %}
-    </ul> {% endcomment %}
+        <div class="alert alert-{{ message.tags }} my-0" role="alert">
+          {% if message.message == "Incorrect Email or Password!" %}
+            {{ message }}
+            <form id="resetPasswordForm" style="display:inline-flex;" method="post" action="/reset-password-mail">
+              {% csrf_token %}
+              <input type="hidden" name="email" value='{{ message.extra_tags }}' required readonly>
+              <button class="btn btn-sm btn-primary" type="submit">Reset Password</button>
+            </form>
+          {% else %}
+            {{ message }}
+          {% endif %}
+        </div>
+      {% endfor %}
     {% endif %}
     <section id="navwrapper" class="hoc clear">
       <nav id="mainav">

@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from home.models import Tlogs, Tlog_body, Login, Tlog_comment
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.http import HttpResponse, JsonResponse
 from django.core.files.storage import FileSystemStorage
 from django.template.loader import render_to_string
@@ -15,6 +15,13 @@ from rest_framework import viewsets
 from home.serializers import HexaSerializers, BodySerializers, CommentSerializers
 import re
 import json
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+import string
+import random
+from django.http import HttpRequest
+from django.utils.html import strip_tags
+from hashlib import sha256
+
 
 class HexaViewSet(viewsets.ModelViewSet):
     queryset=Tlogs.objects.all()
@@ -51,9 +58,13 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset=Tlog_comment.objects.all()
     serializer_class=CommentSerializers
 
+def encrypt_now(string):
+    return sha256(string.encode('utf-8')).hexdigest()
 def get_this_month():
     this_month = Tlogs.objects.filter(publish=1).filter( date__gte = datetime.now() - timedelta(days=28)).order_by('-views').values()[:2]
     return make_tlog_body(this_month)
+def id_generator(size=50, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def get_top_users():
     # First, create a subquery to calculate the sum of views for each email
@@ -76,73 +87,166 @@ def add_to_footer(context):
 
 # Create your views here.
 def index(request):
-    # data = Tlogs.objects.filter(publish=1).order_by('-id').values()[:6]
-    data = Tlogs.objects.filter(publish=1).order_by('-id').values()[:6]
-    my_data = make_tlog_body(data)
-    trending = Tlogs.objects.filter(publish=1).filter( date__gte = datetime.now() - timedelta(days=10)).order_by('-views').values()[:3]
-    trending_tlogs = make_tlog_body(trending)
-    this_week = Tlogs.objects.filter(publish=1).filter( date__gte = datetime.now() - timedelta(days=7)).order_by('-views').values()[:2]
-    weekly_top = make_tlog_body(this_week)
+    if request.method == "GET":
+        # data = Tlogs.objects.filter(publish=1).order_by('-id').values()[:6]
+        data = Tlogs.objects.filter(publish=1).order_by('-id').values()[:6]
+        my_data = make_tlog_body(data)
+        trending = Tlogs.objects.filter(publish=1).filter( date__gte = datetime.now() - timedelta(days=10)).order_by('-views').values()[:3]
+        trending_tlogs = make_tlog_body(trending)
+        this_week = Tlogs.objects.filter(publish=1).filter( date__gte = datetime.now() - timedelta(days=7)).order_by('-views').values()[:2]
+        weekly_top = make_tlog_body(this_week)
 
-    
+        
 
 
 
-    tlog_count = Tlogs.objects.filter(publish=1).all().count()
-    users_count = Login.objects.all().count()
-    
-    context = {
-        'tlogs': my_data,
-        'tlog_count': tlog_count,
-        'users_count': users_count,
-        'trending_tlogs': trending_tlogs,
-        'weekly_top':weekly_top
-    }
-    context = add_to_footer(context)
+        tlog_count = Tlogs.objects.filter(publish=1).all().count()
+        users_count = Login.objects.all().count()
+        
+        context = {
+            'tlogs': my_data,
+            'tlog_count': tlog_count,
+            'users_count': users_count,
+            'trending_tlogs': trending_tlogs,
+            'weekly_top':weekly_top
+        }
+        context = add_to_footer(context)
+        return render(request, 'index.html', context)
     if request.method == "POST":
         email = request.POST.get('email')
-        password = request.POST.get('password')
+        password = encrypt_now(request.POST.get('password'))
         if request.POST.get('type') == "signup":
             phone = request.POST.get('phone')
             fname = request.POST.get('fname')
             lname = request.POST.get('lname')
-            cpassword = request.POST.get('cpassword')
-            if password == request.POST.get('cpassword'):
-                city = request.POST.get('city')
-                state = request.POST.get('state')
-                country = request.POST.get('country')
-                terms = request.POST.get('terms')
-                loginz = Login(email=email, phone=phone, password=password, city=city, state=state, country=country, terms=terms, date=datetime.now())
-                loginz.save()
-                user = User.objects.create_user(email, email, password)
-                user.first_name = fname
-                user.last_name = lname
-                user.save()
-                messages.success(request, 'Congrats! '+fname+' '+lname+', You are a registered user now.')
+            if not User.objects.filter(email=email).exists():
+                if (request.POST.get('password') == request.POST.get('cpassword')):
+                    city = request.POST.get('city')
+                    state = request.POST.get('state')
+                    country = request.POST.get('country')
+                    terms = request.POST.get('terms')
+                    verification_key = email+id_generator()
+                    verification_key_datetime = datetime.now()
+                    base_url = request.build_absolute_uri('/')
+                    body = "Hello "+ fname +',<br>Click on the link to verify your email address.<br>' + base_url +"maildomainverify/" + verification_key + " <br>Feel free to contact."
+                    loginz = Login(email=email, phone=phone, password=password, verified=0, verification_key=verification_key, verification_key_datetime=verification_key_datetime, city=city, state=state, country=country, terms=terms, date=datetime.now())
+                    loginz.save()
+                    
+
+                    # Assuming you have your HTML template file saved in 'templates/email_template.html'
+                    html_content = render_to_string('email_verification_template.html', {'fname': fname, 'base_url': base_url, 'verification_key': verification_key})
+
+                    # Create an instance of EmailMultiAlternatives to send both HTML and plain text versions of the email
+                    mkemail = EmailMultiAlternatives('Verify Your Email', strip_tags(html_content), 'tlogs@harshpratap.online', [email])
+                    mkemail.attach_alternative(html_content, 'text/html')
+                    mkemail.send()
+
+
+                    user = User.objects.create_user(username=email, email=email, password=password)
+                    user.first_name = fname
+                    user.last_name = lname
+                    user.save()
+                    messages.success(request, 'Congrats! '+fname+' '+lname+', You are a registered user now.')
+                else:
+                    messages.danger(request, 'Incorrect Password!')
             else:
-                messages.danger(request, 'Incorrect Password!')
+                messages.warning(request, 'Try login again!')
         else:
+            print('lol')
             user = authenticate(username=email, password=password)
             if user is not None:
                 login(request, user)
             else:
-                messages.warning(request, 'Incorrect Email or Password!')
-        return redirect('/')
-    return render(request, 'index.html', context)
+                messages.warning(request, 'Incorrect Email or Password!', extra_tags = email)
+    return redirect('/')
     # return JsonResponse({'data':context})
 
-def maildomainverify(request):
-   # some code
-   file_data = ""
-   response = HttpResponse(file_data, content_type='application/text charset=utf-8')
-   response['Content-Disposition'] = 'attachment; filename="417fe082bedd199ccad354833b2df253.txt"'
-   return response
-    # filename = "417fe082bedd199ccad354833b2df253.txt"
-    # content = ''
-    # response = HttpResponse(content, content_type='text/plain')
-    # response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
-    # return response
-    # return render(request, '417fe082bedd199ccad354833b2df253.txt')
+def maildomainverify(request, id):
+    verification_key = id
+    update = Login.objects.filter(verification_key = verification_key).update(verified="1")
+    messages.success(request, 'Congrats! Your email is verified now.')
+    return redirect('/')
+
+def reset_password_mail(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        try:
+            login_obj = Login.objects.filter(email=email).values()[:1][0]
+        except Login.DoesNotExist:
+            messages.error(request, "User with this email does not exist.")
+            return redirect('/')
+        
+        verification_key = email + id_generator()
+        verification_key_datetime = datetime.now()
+        base_url = request.build_absolute_uri('/')
+        
+        Login.objects.filter(email=email).update(verification_key = verification_key, verification_key_datetime = verification_key_datetime, verified = 2)
+        
+        # Send reset password email
+        html_content = render_to_string('email_password_reset.html', {'fname': login_obj['fname'], 'base_url': base_url, 'reset_key': verification_key})
+        email = EmailMultiAlternatives('Reset your password', strip_tags(html_content), 'tlogs@harshpratap.online', [email])
+        email.attach_alternative(html_content, 'text/html')
+        email.send()
+        
+        messages.success(request, 'Please check your email and follow the instructions to reset your password.')
+        return redirect('/')
+    else:
+        messages.error(request, "Can't reset now! Please try after sometime.")
+        return redirect('/')
+
+def reset_password(request, id):
+    if id != 'set-password':
+        try:
+            verification_key = id
+            obj = Login.objects.filter(verification_key=verification_key).values()[:1][0]
+            current_time = datetime.now()
+            time_difference = current_time - obj['verification_key_datetime']
+            
+            # Check if the verification key is expired
+            if time_difference > timedelta(hours=2):
+                messages.error(request, 'Link Expired!')
+                return redirect('/')
+            # Check if the verification key is pending verification
+            if obj['verified'] == '2':
+                Login.objects.filter(verification_key=verification_key).update(verified = 3)
+                messages.success(request, 'Please set a new password!')
+                context = {"verification_key": verification_key}
+                return render(request, 'new-password.html', context)
+            else:
+                messages.error(request, 'Invalid Link!')
+                return redirect('/')
+        except Login.DoesNotExist:
+            messages.error(request, 'Invalid Link!')
+            return redirect('/')
+    else:
+        verification_key = request.POST.get("verification_key")
+        password = encrypt_now(request.POST.get("password"))
+        try:
+            obj = Login.objects.filter(verification_key=verification_key).values()[:1][0]
+            current_time = datetime.now()
+            time_difference = current_time - obj['verification_key_datetime']
+            # Check if the verification key is expired
+            if time_difference > timedelta(hours=2):
+                messages.error(request, 'Link Expired!')
+                return redirect('/')
+            # Check if the verification key is in the correct state
+            if obj['verified'] == '3':
+                # Hash the password before saving
+                Login.objects.filter(verification_key=verification_key).update(password = password)
+                user = User.objects.get(username=obj['email'], email=obj['email'])
+                user.set_password(password)
+                user.save()
+                update_session_auth_hash(request, user)
+                Login.objects.filter(verification_key=verification_key).update(verified = 1)
+                messages.success(request, 'Password has been changed! Please try logging in.')
+            else:
+                messages.error(request, 'Invalid Link!')
+        except Login.DoesNotExist:
+            messages.error(request, 'Invalid Link!')
+    return redirect('/')
+
+
+
 
 def sign_out(request):
     logout(request)
@@ -150,11 +254,15 @@ def sign_out(request):
     return redirect('/')
 
 def about(request):
+    base_url = request.build_absolute_uri('/')
+    print(base_url+"maildomainverify")
     return redirect('/')
     # return render(request, 'pages/basic-grid.html')
 
 
 def contact(request):
+    email = EmailMessage('Subject', 'Body', 'tlogs@harshpratap.online', ['harshpratap652@gmail.com'])
+    email.send()
     return redirect('/')
     # return render(request, 'pages/basic-grid.html')
 
@@ -454,3 +562,32 @@ def save_user_fullname(request):
             return False
         return JsonResponse(response_data, status=201)
     return False
+    
+def list_users(request):
+    data = list(Login.objects.values().order_by('email'))
+    users = list(Login.objects.values('id', 'email').order_by('email'))
+    emails = []
+    ids = {}
+    i = 0
+    j = 0
+    for user in users:
+        if i == 0:
+            emails.append({'email':user['email'], 'id':[user['id']]})
+            j = j + 1
+        else:
+            if user['email'] != users[i-1]['email']:
+                emails.append({'email':user['email'], 'id':[user['id']]})
+                j = j + 1
+            else:
+                emails[j-1]['id'].append(user['id'])
+        i = i + 1
+    # for user in emails:
+    #     i = 0
+    #     for id in user['id']:
+    #         if i != 0:
+    #             Login.objects.get(id=id).delete()
+    #             print(id)
+    #             print('deleted')
+    #         i = i + 1
+
+    return JsonResponse({'status':1,'emails':emails, 'users':data})
