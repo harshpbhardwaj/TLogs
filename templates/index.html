@@ -48,10 +48,10 @@
       {% for article in news.articles|slice:":9" %}
       <li class="one_third {% if forloop.counter|add:'-1'|divisibleby:3 %} first{% endif %}">
         <article><a href="{{ article.url }}" target="_blank">
-            <img src="{{ article.urlToImage }}" style="max-height: 120px; margin-bottom: 40px;" alt="">
+            <img class='news-img' src="{{ article.urlToImage }}" style="margin-bottom: 40px;" alt="">
         </a>
-          <h6 class="heading">{{ article.title }}</h6>
-          <p class="btmspace-30">
+          <h6 class="heading new-title">{{ article.title }}</h6>
+          <p class="btmspace-30 new-para">
             {{ article.description }}
             [<a href="{{ article.url }}" target="_blank">&hellip;</a>]
           </p>
@@ -79,13 +79,13 @@
       <li class="one_third {% if forloop.counter == 1 %} first{% endif %}">
         <article><a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">
           {% if i.image != '' %}
-            <img src="{{ i.image }}" style="max-height: 120px; margin-bottom: 40px;" alt="">
+            <img class='news-img' src="{{ i.image }}" style="margin-bottom: 40px;" alt="">
           {% else %}
-            <img src="{% static 'images/demo/348x220.png' %}" style="max-height: 120px; margin-bottom: 40px;" alt="">
+            <img class='news-img' src="{% static 'images/demo/348x220.png' %}" style="margin-bottom: 40px;" alt="">
           {% endif %}
         </a>
-          <h6 class="heading">{{ i.title }}</h6>
-          <p class="btmspace-30">{{ i.body }} [<a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">&hellip;</a>]</p>
+          <h6 class="heading new-title">{{ i.title }}</h6>
+          <p class="btmspace-30 new-para">{{ i.body }} [<a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">&hellip;</a>]</p>
           <footer><a class="btn" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">Read More</a></footer>
         </article>
       </li>
