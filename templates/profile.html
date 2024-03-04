@@ -31,12 +31,12 @@
         augue integer vulputate lectus vitae lorem suspendisse potenti donec suscipit.</blockquote> {% endcomment %}
       {% if request.user.username == profile.email %}
       <h6 class="heading">
-        <span id="name-output">{{ profile.fname }} {{ profile.mname }} {{ profile.lname }} <i class="fa fa-edit" onclick="edit_name('edit');"></i></span>
+        <span id="name-output">{{ profile.fname }} {{ profile.mname }} {{ profile.lname }} <i class="fa fa-edit" style='cursor:pointer;' onclick="edit_name('edit');"></i></span>
         <span style="display:none;" id="name-input">
           <input type="text" style="width:100px;margin-right:10px;" class="form-control" id="fname" value="{{ profile.fname }}"> 
           <input type="text" style="width:100px;margin-right:10px;"  class="form-control" id="mname" value="{{ profile.mname }}"> 
           <input type="text" style="width:100px;margin-right:10px;"  class="form-control" id="lname" value="{{ profile.lname }}"> 
-          <i class="fa fa-save" onclick="edit_name('save');"></i>
+          <i class="fa fa-save" style='cursor:pointer;' onclick="edit_name('save');"></i>
         </span>
       </h6>
       {% else %}
@@ -163,7 +163,7 @@
       document.getElementById("name-input").style.display = "inline-flex";
     }else{
       const spinner = `<i class="fa fa-spinner fa-spin"></i>`;
-      const edit_icon = `<i class="fa fa-edit" onclick="edit_name('edit');"></i>`;
+      const edit_icon = `<i class="fa fa-edit" style='cursor:pointer;' onclick="edit_name('edit');"></i>`;
       const fname = document.getElementById("fname").value;
       const mname = document.getElementById("mname").value;
       const lname = document.getElementById("lname").value;
