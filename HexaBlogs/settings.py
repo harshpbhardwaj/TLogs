@@ -181,8 +181,8 @@ REST_FRAMEWORK = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-EMAIL_HOST = 'mail.harshpratap.online'
+EMAIL_HOST = 'smtp-relay.brevo.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'tlogs@harshpratap.online'
-EMAIL_HOST_PASSWORD = 'k~MsxE*g}(Ug'
+EMAIL_HOST_USER = 'harshpratap652@gmail.com'
+EMAIL_HOST_PASSWORD = 'K3Enq1fZtSdYjAPp'

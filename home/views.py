@@ -137,7 +137,7 @@ def index(request):
                     html_content = render_to_string('email_verification_template.html', {'fname': fname, 'base_url': base_url, 'verification_key': verification_key})
 
                     # Create an instance of EmailMultiAlternatives to send both HTML and plain text versions of the email
-                    mkemail = EmailMultiAlternatives('Verify Your Email', strip_tags(html_content), 'tlogs@harshpratap.online', [email])
+                    mkemail = EmailMultiAlternatives('Verify Your Email', strip_tags(html_content), 'tlogs@harx.online', [email])
                     mkemail.attach_alternative(html_content, 'text/html')
                     mkemail.send()
 
@@ -184,7 +184,7 @@ def reset_password_mail(request):
         
         # Send reset password email
         html_content = render_to_string('email_password_reset.html', {'fname': login_obj['fname'], 'base_url': base_url, 'reset_key': verification_key})
-        email = EmailMultiAlternatives('Reset your password', strip_tags(html_content), 'tlogs@harshpratap.online', [email])
+        email = EmailMultiAlternatives('Reset your password', strip_tags(html_content), 'tlogs@harx.online', [email])
         email.attach_alternative(html_content, 'text/html')
         email.send()
         
@@ -261,7 +261,7 @@ def about(request):
 
 
 def contact(request):
-    email = EmailMessage('Subject', 'Body', 'tlogs@harshpratap.online', ['harshpratap652@gmail.com'])
+    email = EmailMessage('Subject', 'Body', 'tlogs@harx.online', ['harshpratap652@gmail.com'])
     email.send()
     return redirect('/')
     # return render(request, 'pages/basic-grid.html')
