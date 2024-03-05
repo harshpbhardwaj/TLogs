@@ -46,7 +46,7 @@
     </div>
     <ul class="nospace group center">
       {% for article in news.articles|slice:":9" %}
-      <li class="one_third {% if forloop.counter|add:'-1'|divisibleby:3 %} first{% endif %}">
+      <li class="one_third news-box {% if forloop.counter|add:'-1'|divisibleby:3 %} first{% endif %} hover_effect_p" onclick="window.open('{{ article.url }}');" style="cursor:pointer;">
         <article><a href="{{ article.url }}" target="_blank">
             <img class='news-img' src="{{ article.urlToImage }}" style="margin-bottom: 40px;" alt="">
         </a>
@@ -55,11 +55,11 @@
             {{ article.description }}
             [<a href="{{ article.url }}" target="_blank">&hellip;</a>]
           </p>
-          <footer><a class="btn" href="{{ article.url }}" target="_blank">Read More</a></footer>
+          {% comment %} <footer><a class="btn" href="{{ article.url }}" target="_blank">Read More</a></footer> {% endcomment %}
         </article>
       </li>
       {% if forloop.counter|divisibleby:3 %}
-    </ul><hr>
+    </ul><br>
     <ul class="nospace group center">
       {% endif %}
       {% endfor %}
@@ -76,7 +76,7 @@
     </div>
     <ul class="nospace group center">
       {% for i in trending_tlogs %}
-      <li class="one_third {% if forloop.counter == 1 %} first{% endif %}">
+      <li class="one_third news-box {% if forloop.counter == 1 %} first{% endif %} hover_effect_p" onclick="window.location = '{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}'">
         <article><a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">
           {% if i.image != '' %}
             <img class='news-img' src="{{ i.image }}" style="margin-bottom: 40px;" alt="">
@@ -86,7 +86,7 @@
         </a>
           <h6 class="heading new-title">{{ i.title }}</h6>
           <p class="btmspace-30 new-para">{{ i.body }} [<a href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">&hellip;</a>]</p>
-          <footer><a class="btn" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">Read More</a></footer>
+          {% comment %} <footer><a class="btn" href="{{ request.scheme }}://{{ request.get_host }}/view/{{ i.t_id }}">Read More</a></footer> {% endcomment %}
         </article>
       </li>
       {% endfor %}
@@ -106,8 +106,8 @@
 <div class="wrapper row3">
   <section class="hoc container clear">
     <div class="sectiontitle">
-      <p class="nospace font-xs">Id erat duis nibh diam at</p>
-      <h6 class="heading">Vulputate quis lacus nullam</h6>
+      <p class="nospace font-xs">Alone we can do so little, together we can do so much</p>
+      <h6 class="heading">TLoggers & TLogs</h6>
     </div>
     <ul id="stats" class="nospace group">
       <li>
