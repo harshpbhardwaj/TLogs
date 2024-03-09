@@ -27,3 +27,34 @@ To run TLogs locally, follow these steps:
 
    ```bash
    git clone https://github.com/your-username/tlogs.git
+   
+2. Install dependencies:
+
+   ```bash
+   cd tlogs
+   pip install -r requirements.txt
+
+3. Set up the database:
+
+
+   ```bash
+   python manage.py migrate
+
+4. Run the development server:
+
+
+   ```bash
+   python manage.py runserver
+
+Access TLogs in your web browser at http://localhost:8000.
+
+## Contributing
+
+Contributions are welcome! If you encounter any bugs, have feature requests, or want to contribute improvements, please submit an issue or create a pull request.
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+
+   ```vbnet
+   Feel free to customize this README.md file with additional information or sections specific to your project's requirements and setup.
